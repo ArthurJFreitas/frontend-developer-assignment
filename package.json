@@ -4,6 +4,8 @@
   "private": true,
   "dependencies": {
     "@chakra-ui/react": "^3.0.2",
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
     "@types/jest": "^29.4.0",
     "@types/node": "^18.14.0",
     "@types/react": "^18.0.28",
