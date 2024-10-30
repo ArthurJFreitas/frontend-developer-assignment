@@ -76,19 +76,32 @@ export const useRecipients = (searchTerm: string, recipientsData: RecipientsData
     );
   }, []);
 
-  const removeRecipient = useCallback((email: string) => {
-    setSelectedRecipients((prev) => prev.filter((r) => r.email !== email));
-    const recipient = recipientsData.find((r) => r.email === email);
-    if (recipient) {
-      setAvailableRecipients((prev) => [...prev, recipient]);
-    }
-  }, [recipientsData]);
+  const removeRecipient = useCallback(
+    (email: string) => {
+      setSelectedRecipients((prev) => prev.filter((r) => r.email !== email));
+      const recipient = recipientsData.find((r) => r.email === email);
+      if (recipient) {
+        setAvailableRecipients((prev) => {
+          return prev.some((r) => r.email === recipient.email) ? prev : [...prev, recipient];
+        });
+      }
+    },
+    [recipientsData]
+  );
 
-  const removeDomain = useCallback((domain: string) => {
-    setSelectedRecipients((prev) => prev.filter((r) => !r.email.endsWith(`@${domain}`)));
-    const domainRecipients = recipientsData.filter((r) => r.email.endsWith(`@${domain}`));
-    setAvailableRecipients((prev) => [...prev, ...domainRecipients]);
-  }, [recipientsData]);
+  const removeDomain = useCallback(
+    (domain: string) => {
+      setSelectedRecipients((prev) => prev.filter((r) => !r.email.endsWith(`@${domain}`)));
+      const domainRecipients = recipientsData.filter((r) => r.email.endsWith(`@${domain}`));
+      setAvailableRecipients((prev) => {
+        const newAvailableRecipients = domainRecipients.filter(
+          (domainRecipient) => !prev.some((r) => r.email === domainRecipient.email)
+        );
+        return [...prev, ...newAvailableRecipients];
+      });
+    },
+    [recipientsData]
+  );
  
   return {
     expandedDomains,
